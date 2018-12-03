@@ -116,6 +116,10 @@ class MicrophoneStream(object):
             yield b''.join(data)
 
 
+
+    
+
+
 def listen_print_loop(responses):
     """Iterates through server responses and prints them.
 
@@ -165,8 +169,8 @@ def listen_print_loop(responses):
             num_chars_printed = len(transcript)
            
             if outputflag == 1: 
-            	if not transcript.find("你好嗎") == -1:
-            	    print "我很好的"
+            	if transcript.find("你好") == -1:
+            	    donothing=1
             	else: 
             	    print "電話回應:我很好的"
             	    
@@ -176,13 +180,13 @@ def listen_print_loop(responses):
             	        pyglet.app.exit()
             	    print "Song length is: %f" % music.duration
             	    # foo.duration is the song length
-            	    pyglet.clock.schedule_once(exiter, music.duration+1)    
+            	    pyglet.clock.schedule_once(exiter, music.duration)    
             	    pyglet.app.run()
-            	    outputflag = 0
+            	    break
 
             if outputflag2 == 1: 	
-            	if transcript.find("我要訂位") == -1:
-            	    print ""
+            	if transcript.find("訂位") == -1:
+            	    donothing=1
             	else: 
             	    print "電話回應:好的，你們有幾個人"
             	    
@@ -192,10 +196,28 @@ def listen_print_loop(responses):
             	        pyglet.app.exit()
             	    print "Song length is: %f" % music.duration
             	    # foo.duration is the song length
-            	    pyglet.clock.schedule_once(exiter, music.duration+1)
+            	    pyglet.clock.schedule_once(exiter, music.duration)
             	    
             	    pyglet.app.run()
-            	    outputflag2 = 0
+            	    break
+
+                if transcript.find("個人") == -1:
+                    donothing=1
+                else: 
+                    print "電話回應:那你的電話是多少"
+                    
+                    music=pyglet.media.load('speech3.mp3')
+                    music.play()
+                    def exiter(dt):
+                        pyglet.app.exit()
+                    print "Song length is: %f" % music.duration
+                    # foo.duration is the song length
+                    pyglet.clock.schedule_once(exiter, music.duration)
+                    
+                    pyglet.app.run()
+                    break
+
+
 
 
 
@@ -215,6 +237,21 @@ def listen_print_loop(responses):
             	print('Exiting..')
                 break
 
+            if transcript.find("09") == -1:
+                    donothing=1
+            else: 
+                print "電話回應:好的，訂位成功了"
+                    
+                music=pyglet.media.load('speech4.mp3')
+                music.play()
+                def exiter(dt):
+                    pyglet.app.exit()
+                print "Song length is: %f" % music.duration
+                # foo.duration is the song length
+                pyglet.clock.schedule_once(exiter, music.duration)
+                
+                pyglet.app.run()
+                break
             #if transcript.find("你好嗎") == -1:
             #    print ""
             #else: 
@@ -264,17 +301,13 @@ def main():
 
         # Now, put the transcription responses to use.
         try: 
-        	listen_print_loop(responses)
+            listen_print_loop(responses)
         except Exception as exception:
         # Output unexpected Exceptions.
         	print("Excption handle : Exceeded maximum allowed stream duration of 65 seconds")
 
 
 if __name__ == '__main__':
-    main()
-    main()
-    main()
-    main()
-    main()
-    
+    while True:
+        main()
 # [END speech_transcribe_streaming_mic]
